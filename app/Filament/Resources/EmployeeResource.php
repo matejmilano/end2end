@@ -8,6 +8,7 @@ use App\Models\Employees;
 use Filament\Forms;
 use Filament\Forms\Components\Card;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Resources\Form;
@@ -31,13 +32,20 @@ class EmployeeResource extends Resource
             ->schema([
                 Card::make()
                     ->schema([
-                        Select::make('department_id')
-                            ->relationship('department', 'name')->required(),
                         TextInput::make('first_name')->required()->maxLength(255),
                         TextInput::make('last_name')->required()->maxLength(255),
-                        TextInput::make('contract_type')->required()->maxLength(255),
-                        TextInput::make('contract_lenght')->required()->maxLength(255),
                         DatePicker::make('birth_date')->required(),
+                        Radio::make('gender')
+                            ->options([
+                                'male' => 'Male',
+                                'female' => 'Female'
+                            ])->required(),
+                        Select::make('department_id')
+                            ->relationship('department', 'name')->required(),
+                        Select::make('contract_id')
+                            ->relationship('contract', 'type')->required(),
+                        Select::make('contract_lenght_id')
+                            ->relationship('contractLenght', 'lenght')->required(),
                         DatePicker::make('date_hired')->required(),
                     ])
             ]);
@@ -51,11 +59,14 @@ class EmployeeResource extends Resource
                 TextColumn::make('first_name')->sortable()->searchable(),
                 TextColumn::make('last_name')->sortable()->searchable(),
                 TextColumn::make('department.name')->sortable(),
+                TextColumn::make('contract.type')->sortable(),
+                TextColumn::make('contractLenght.lenght')->sortable(),
+                TextColumn::make('gender')->sortable(),
                 TextColumn::make('date_hired')->date(),
-                TextColumn::make('created_at')->dateTime(),
             ])
             ->filters([
-                SelectFilter::make('department')->relationship('department', 'name')
+                SelectFilter::make('department')->relationship('department', 'name'),
+                SelectFilter::make('contract')->relationship('contract', 'type')
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

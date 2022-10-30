@@ -11,17 +11,25 @@ class Employees extends Model
 
     protected $fillable = [
         'department_id',
+        'contract_id',
+        'contract_lenght_id', 
         'first_name',
         'last_name',
+        'gender',
         'profile_photo_path',
         'birth_date',
         'date_hired',
-        'contract_type',
-        'contract_lenght'
     ];
     
-    public function department()
-    {
+    public function department(){
         return $this->belongsTo(Department::class);
+    }
+
+    public function contract(){
+        return $this->belongsTo(Contract::class);
+    }
+
+    public function contractLenght(){
+        return $this->belongsTo(ContractLenght::class);
     }
 }
